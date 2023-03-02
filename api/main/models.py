@@ -20,9 +20,9 @@ class Course(BaseModel):
     def __str__(self):
         return self.title
 class Student(BaseModel):
-    name = models.CharField(max_length=255, blank=False, null=False)
-    email = models.EmailField(max_length=254, unique=True, blank=False, null=False)
-    password = models.CharField(max_length=50, blank=False, null=False)
+    name = models.CharField(max_length=255)
+    email = models.EmailField(max_length=254, unique=True)
+    password = models.CharField(max_length=50)
     phone = models.IntegerField(max_length=10, blank=True, null=True)  # CharField? (+, spaces, () etc.)
     courses = models.ManyToManyField(Course)
     favorite_courses = models.ForeignKey(Course, null=True, blank=True)
