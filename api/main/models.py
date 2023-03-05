@@ -3,16 +3,11 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.core.exceptions import ValidationError
 
 # Create your models here.
-class Role(models.Model):
-    pass
-
-
 class BaseUser(AbstractBaseUser):
     username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(max_length=254, unique=True)
     phone = models.IntegerField(max_length=10, blank=True, null=True)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, blank=True)
-    #  role = [Student, Expert, Curator, ScoolAdmin]
+    role = None
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
