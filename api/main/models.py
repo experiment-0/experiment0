@@ -3,7 +3,59 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.core.exceptions import ValidationError
 
 # Create your models here.
-class BaseModel(models.Model):
+class BaseUser(AbstractBaseUser):
+    username = models.CharField(max_length=255, unique=True)
+    email = models.EmailField(max_length=254, unique=True)
+    phone = models.IntegerField(max_length=10, blank=True, null=True)
+    role = None
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+class Student(BaseUser):
+    courses = models.ManyToManyField(Course)
+    favorite_courses = models.ForeignKey(Course, null=True, blank=True)
+    certificate = models.FileField(upload_to='certificates/', null=True, blank=True)
+
+
+class Expert(BaseUser):
+    pass
+
+
+class Curator(BaseUser):
+    pass
+
+
+class ScoolAdmin(BaseUser):
+    pass
+
+
+class BaseModelManager(BaseUserManager):
+    def create_user(self, username, email, password=None):
+        if not email:
+            raise ValueError("Users must have email field")
+        if not username:
+            raise ValueError("Users must have username field")
+        user = self.model(
+            email=self.normalize_email(email),
+            username=username, )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, email, password=None):
+        user = self.create_user(username=username,
+                                email=email,
+                                password=password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
+
+class BaseContent(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
     deleted = models.BooleanField(default=False, verbose_name="Deleted")
@@ -13,16 +65,14 @@ class BaseModel(models.Model):
         self.save()
 
 
-class Course(BaseModel):
+class School(BaseContent):
     pass
 
 
-class Student(AbstractBaseUser):
-    name = models.CharField(max_length=255)
-    email = models.EmailField(max_length=254, unique=True)
-    phone = models.IntegerField(max_length=10, blank=True, null=True)
-    courses = models.ManyToManyField(Course)
-    favorite_courses = models.ForeignKey(Course, null=True, blank=True)
-    certificate = models.FileField(upload_to='certificates/', null=True, blank=True)
+class Course(BaseContent):
+    pass
 
+
+class Lesson(BaseContent):
+    pass
 
