@@ -81,6 +81,7 @@ class BaseUser(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    comment = models.ForeignKey(Comment, null=True, blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
     objects = BaseModelManager()
@@ -93,7 +94,7 @@ class Certificate(models.Model):
 
 class StudentStatus(models.Model):
     """
-    Statuses could change, so we need to store them in DB
+    Статусы студента могут меняться, поэтому храним их в БД
     """
     status_id = models.IntegerField(null=True, blank=True)
     status_name = models.CharField(max_length=255, null=True, blank=True)
