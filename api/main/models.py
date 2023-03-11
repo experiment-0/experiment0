@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 
 
 class BaseModelManager(BaseUserManager):
-    def create_user(self, username, email, password=None):
+    def create_user(self, username: str, email: str, password: str=None) -> user:
         if not email:
             raise ValueError("Users must have email field")
         if not username:
@@ -18,7 +18,7 @@ class BaseModelManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, email, password=None):
+    def create_superuser(self, username: str, email: str, password: str=None) -> user
         user = self.create_user(username=username,
                                 email=email,
                                 password=password)
