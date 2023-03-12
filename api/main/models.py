@@ -117,5 +117,5 @@ class Curator(BaseUser):
     course = models.ForeignKey(Course, null=True, blank=True)
 
 
-class ScoolAdmin(BaseUser):
+class SchoolAdmin(BaseUser):
     school = models.ForeignKey(School, null=True, blank=True)
