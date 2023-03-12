@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main.apps.MainConfig',
+    'user.apps.MainConfig',
+    'school.apps.MainConfig',
 ]
 
 MIDDLEWARE = [
@@ -130,4 +131,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = "main.BaseUser"
+AUTH_USER_MODEL = "user.BaseUser"

@@ -42,9 +42,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Course',
             fields=[
-                ('basecontent_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='main.basecontent')),
+                ('basecontent_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='user.basecontent')),
             ],
-            bases=('main.basecontent',),
+            bases=('user.basecontent',),
         ),
         migrations.CreateModel(
             name='Curator',
@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
             options={
                 'abstract': False,
             },
-            bases=('main.baseuser',),
+            bases=('useruser.BaseUser',),
         ),
         migrations.CreateModel(
             name='Expert',
@@ -64,21 +64,21 @@ class Migration(migrations.Migration):
             options={
                 'abstract': False,
             },
-            bases=('main.baseuser',),
+            bases=('useruser.BaseUser',),
         ),
         migrations.CreateModel(
             name='Lesson',
             fields=[
-                ('basecontent_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='main.basecontent')),
+                ('basecontent_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='user.basecontent')),
             ],
-            bases=('main.basecontent',),
+            bases=('user.basecontent',),
         ),
         migrations.CreateModel(
             name='School',
             fields=[
-                ('basecontent_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='main.basecontent')),
+                ('basecontent_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='user.basecontent')),
             ],
-            bases=('main.basecontent',),
+            bases=('user.basecontent',),
         ),
         migrations.CreateModel(
             name='ScoolAdmin',
@@ -88,19 +88,19 @@ class Migration(migrations.Migration):
             options={
                 'abstract': False,
             },
-            bases=('main.baseuser',),
+            bases=('user.baseuser',),
         ),
         migrations.CreateModel(
             name='Student',
             fields=[
                 ('baseuser_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
                 ('certificate', models.FileField(blank=True, null=True, upload_to='certificates/')),
-                ('courses', models.ManyToManyField(related_name='courses', to='main.course')),
-                ('favorite_courses', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='main.course')),
+                ('courses', models.ManyToManyField(related_name='courses', to='user.course')),
+                ('favorite_courses', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='user.course')),
             ],
             options={
                 'abstract': False,
             },
-            bases=('main.baseuser',),
+            bases=('user.baseuser',),
         ),
     ]
