@@ -4,9 +4,9 @@ from django.db import models
 class BaseContent(models.Model):
     title = models.CharField(max_length=255, verbose_name="Title")
     description = models.TextField(verbose_name="Description")
-    video = models.FileField(upload_to='videos/', verbose_name="Video")
+    video = models.URLField(verbose_name="Video URL")
     image = models.ImageField(upload_to='images/', verbose_name="Image")
-    rating = models.IntegerField(verbose_name="Rating")
+    # rating = models.IntegerField(verbose_name="Rating")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
     deleted = models.BooleanField(default=False, verbose_name="Deleted")
@@ -21,11 +21,12 @@ class School(BaseContent):
 
 
 class Course(BaseContent):
+    is_finished = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
 
 class Lesson(BaseContent):
-    pass
+    is_passed = models.BooleanField(default=False)
 
 
 class Category(models.Model):
