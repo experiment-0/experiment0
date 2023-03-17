@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from school.models import BaseContent, School, Course
+from api.school.models import BaseContent, School, Course
 
 
 class BaseModelManager(BaseUserManager):
