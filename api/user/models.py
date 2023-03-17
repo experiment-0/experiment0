@@ -66,3 +66,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
     deleted = models.BooleanField(default=False, verbose_name="Deleted")
+
+
+class Certificate(models.Model):
+    cert_file = models.FileField(upload_to='certificates/', null=True, blank=True)
