@@ -1,0 +1,8 @@
+{% autoescape off %}
+
+Добрый день {{ user.get_username }},
+Благодарим за интерес к нашей обучающей платформе.
+Чтобы завершить регистрацию, перейдите по ссылке.
+http://{{ domain }}{% url 'verify_email' uidb64=uid token=token %}
+
+{% endautoescape %}
