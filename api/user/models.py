@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from school.models import BaseContent, School, Course
 
 
@@ -27,7 +27,7 @@ class BaseModelManager(BaseUserManager):
         return user
 
 
-class BaseUser(AbstractBaseUser):
+class BaseUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(max_length=254, unique=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
@@ -43,7 +43,7 @@ class BaseUser(AbstractBaseUser):
 
 class Student(BaseUser):
     courses = models.ManyToManyField(Course)
-    favorite_courses = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE)
+    favorite_courses = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE, related_name='favorite_courses')
 
 
 class Expert(BaseUser):
