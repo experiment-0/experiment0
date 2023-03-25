@@ -1,6 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from api.school.models import BaseContent, School, Course
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from school.models import BaseContent, School, Course
+from django.db import models
 
 
 class BaseModelManager(BaseUserManager):
@@ -27,12 +28,13 @@ class BaseModelManager(BaseUserManager):
         return user
 
 
-class BaseUser(AbstractBaseUser):
+class BaseUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(max_length=254, unique=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
     role = None
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    mail_verified_at = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -43,7 +45,7 @@ class BaseUser(AbstractBaseUser):
 
 class Student(BaseUser):
     courses = models.ManyToManyField(Course)
-    favorite_courses = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE)
+    favorite_courses = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE, related_name='favorite_courses')
 
 
 class Expert(BaseUser):
