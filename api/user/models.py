@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from school.models import BaseContent, School, Course
+from school.models import School, Course, Lesson
 from django.db import models
 
 
@@ -44,7 +44,8 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
 
 class Student(BaseUser):
     courses = models.ManyToManyField(Course)
-    favorite_courses = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE, related_name='favorite_courses')
+    favorite_courses = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE,
+                                         related_name='favorite_courses')
 
 
 class Expert(BaseUser):
@@ -63,7 +64,7 @@ class SchoolAdmin(BaseUser):
 class Comment(models.Model):
     text = models.TextField(verbose_name="Text")
     user = models.ForeignKey(BaseUser, verbose_name="User", on_delete=models.DO_NOTHING)
-    content = models.ForeignKey(BaseContent, verbose_name="Content", on_delete=models.DO_NOTHING)
+    content = models.ForeignKey(Lesson, verbose_name="Content", on_delete=models.DO_NOTHING)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
     deleted = models.BooleanField(default=False, verbose_name="Deleted")

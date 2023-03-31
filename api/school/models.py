@@ -11,6 +11,9 @@ class BaseContent(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
     deleted = models.BooleanField(default=False, verbose_name="Deleted")
 
+    class Meta:
+        abstract = True
+
     def delete(self, *args, **kwargs):
         self.deleted = True
         self.save()
@@ -23,12 +26,12 @@ class School(BaseContent):
 class Course(BaseContent):
     is_finished = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    school = models.ForeignKey(School, verbose_name="School", on_delete=models.DO_NOTHING)
+    school = models.ForeignKey(School, verbose_name="School", on_delete=models.CASCADE)
 
 
 class Lesson(BaseContent):
     is_passed = models.BooleanField(default=False)
-    course = models.ForeignKey(Course, verbose_name="Course", on_delete=models.DO_NOTHING)
+    course = models.ForeignKey(Course, verbose_name="Course", on_delete=models.CASCADE)
 
 
 class Category(models.Model):
