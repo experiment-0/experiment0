@@ -23,10 +23,12 @@ class School(BaseContent):
 class Course(BaseContent):
     is_finished = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    school = models.ForeignKey(School, verbose_name="School", on_delete=models.DO_NOTHING)
 
 
 class Lesson(BaseContent):
     is_passed = models.BooleanField(default=False)
+    course = models.ForeignKey(Course, verbose_name="Course", on_delete=models.DO_NOTHING)
 
 
 class Category(models.Model):
