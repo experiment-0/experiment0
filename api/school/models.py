@@ -13,6 +13,7 @@ class BaseContent(models.Model):
 
     class Meta:
         abstract = True
+        # app_label = 'content'
 
     def delete(self, *args, **kwargs):
         self.deleted = True
