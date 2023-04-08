@@ -9,14 +9,18 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import BaseUser
-from .serializers import RegistrationSerializer
+from .serializers import SchoolAdminRegistrationSerializer, StudentRegistrationSerializer
 
 
 class RegistrationAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        serializer = RegistrationSerializer(data=request.data)
+        is_student = request.data.get('is_student')
+        if is_student == 'True':
+            serializer = StudentRegistrationSerializer(data=request.data)
+        else:
+            serializer = SchoolAdminRegistrationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
