@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from school.models import School, Course, Lesson
 from django.db import models
 
 
@@ -53,28 +52,17 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         app_label = 'user'
 
 class Student(BaseUser):
-    courses = models.ManyToManyField(Course, blank=True)
-    favorite_courses = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE,
-                                         related_name='favorite_courses')
-    objects = BaseModelManager()
+    # favorite_courses = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE,
+    #                                      related_name='favorite_courses')
+    pass
 
 class Expert(BaseUser):
     rating = models.IntegerField(null=True, blank=True)
-    courses = models.ManyToManyField(Course)
 
 
 class Curator(BaseUser):
-    course = models.ForeignKey(Course, null=True, blank=True, on_delete=models.DO_NOTHING)
+    pass
 
 
 class SchoolAdmin(BaseUser):
-    school = models.ForeignKey(School, null=True, blank=True, on_delete=models.DO_NOTHING)
-    objects = BaseModelManager()
-
-class Comment(models.Model):
-    text = models.TextField(verbose_name="Text")
-    user = models.ForeignKey(BaseUser, verbose_name="User", on_delete=models.DO_NOTHING)
-    content = models.ForeignKey(Lesson, verbose_name="Content", on_delete=models.DO_NOTHING)
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
-    deleted = models.BooleanField(default=False, verbose_name="Deleted")
+    pass
