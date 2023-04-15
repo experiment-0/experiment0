@@ -1,23 +1,15 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .models import Student, SchoolAdmin
+from .models import BaseUser
 
 User = get_user_model()
 
 
-class StudentRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-    class Meta:
-        model = Student
-        fields = ['email', 'username', 'password', 'is_student']
-        extra_kwargs = {"password": {"write_only": True}}
-
-
-class SchoolAdminRegistrationSerializer(serializers.ModelSerializer):
+class BaseUserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
-        model = SchoolAdmin
-        fields = ['email', 'username', 'password', 'is_student']
+        model = BaseUser
+        fields = ['email', 'username', 'password', 'role']
         extra_kwargs = {"password": {"write_only": True}}
