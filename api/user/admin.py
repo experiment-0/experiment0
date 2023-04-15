@@ -1,10 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.contrib.auth.admin import UserAdmin
-from .models import BaseUser, Student, SchoolAdmin
-
+from .models import BaseUser
 
 User = get_user_model()
-admin.site.register(BaseUser)
-admin.site.register(Student)
-admin.site.register(SchoolAdmin)
+
+
+@admin.register(BaseUser)
+class BaseUserAdminView(admin.ModelAdmin):
+    list_display = ("id", "username", "email", "role")
+    list_filter = ('role', )
