@@ -9,25 +9,21 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import BaseUser
-from .serializers import SchoolAdminRegistrationSerializer, StudentRegistrationSerializer
+from .serializers import BaseUserRegistrationSerializer
 
 
 class RegistrationAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
-        is_student = request.data.get('is_student')
-        if is_student == 'True':
-            serializer = StudentRegistrationSerializer(data=request.data)
-        else:
-            serializer = SchoolAdminRegistrationSerializer(data=request.data)
+        serializer = BaseUserRegistrationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
 
-        verification_link = f"{request.scheme}://{request.get_host()}/api/verify-email/{uid}/{token}/"
+        verification_link = f"{request.scheme}://{request.get_host()}/user/verify-email/{uid}/{token}/"
         message = f"Please verify your email address by clicking the link below:\n\n{verification_link}"
         send_mail(
             "Verify your email address",
@@ -36,7 +32,6 @@ class RegistrationAPIView(APIView):
             [user.email],
             fail_silently=False,
         )
-
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 

@@ -1,5 +1,5 @@
 from django.db import models
-from user.models import SchoolAdmin, Student, Expert, Curator, BaseUser
+from user.models import BaseUser
 
 
 class Comment(models.Model):
@@ -28,18 +28,19 @@ class BaseContent(models.Model):
         self.deleted = True
         self.save()
 
+    def __str__(self):
+        return self.title
+
 
 class School(BaseContent):
-    school_admin = models.ForeignKey(SchoolAdmin, null=True, blank=True, on_delete=models.DO_NOTHING)
+    school_admin = models.ForeignKey(BaseUser, null=True, blank=True, on_delete=models.DO_NOTHING)
 
 
 class Course(BaseContent):
     is_finished = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     school = models.ForeignKey(School, verbose_name="School", on_delete=models.CASCADE)
-    students = models.ManyToManyField(Student, blank=True)
-    experts = models.ManyToManyField(Expert, blank=True)
-    curator = models.ForeignKey(Curator, null=True, blank=True, on_delete=models.DO_NOTHING)
+    user = models.ManyToManyField(BaseUser, blank=True)
 
 
 class Lesson(BaseContent):

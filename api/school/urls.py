@@ -3,5 +3,5 @@ from .views import SchoolListView, SingleSchoolView
 
 urlpatterns = [
     path('schools/', SchoolListView.as_view(), name='school-list'),
-    path('schools/<int:pk>', SingleSchoolView.as_view(), name='create-school'),
+    path('schools/<int:pk>', SingleSchoolView.as_view(), name='school-details'),
 ]
