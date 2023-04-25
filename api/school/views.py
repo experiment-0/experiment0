@@ -9,6 +9,9 @@ from .serializers import SchoolSerializer, CourseSerializer, LessonSerializer
 
 
 class SchoolListView(generics.ListCreateAPIView):
+    """
+    Список всех онлайн-школ. Создание школы (если роль SchoolAdmin)
+    """
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
 
@@ -25,12 +28,18 @@ class SchoolListView(generics.ListCreateAPIView):
 
 
 class SingleSchoolView(generics.RetrieveAPIView):
+    """
+    Редактирование школы по id
+    """
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
     permission_classes = (IsAuthenticated, )
 
 
 class AdminsSchoolView(generics.ListAPIView):
+    """
+    Список школ для админа школы (видит только созданные им школы)
+    """
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
     permission_classes = (IsAuthenticated,)
@@ -41,6 +50,9 @@ class AdminsSchoolView(generics.ListAPIView):
 
 
 class CourseListView(generics.ListCreateAPIView):
+    """
+    Список всех курсов. Создание курса (доступ только авторизованному)
+    """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = (IsAuthenticated,)
@@ -54,12 +66,18 @@ class CourseListView(generics.ListCreateAPIView):
 
 
 class SingleCourseView(generics.RetrieveAPIView):
+    """
+    Редактирование курса по id
+    """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = (IsAuthenticated, )
 
 
 class StudentsCoursesView(generics.ListAPIView):
+    """
+    Список приобретенных курсов (связь студент-курс)
+    """
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = (IsAuthenticated,)
@@ -70,6 +88,9 @@ class StudentsCoursesView(generics.ListAPIView):
 
 
 class LessonListView(generics.ListCreateAPIView):
+    """
+    Список всех уроков. Создание урока (доступ только авторизованному)
+    """
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated,)
@@ -83,12 +104,18 @@ class LessonListView(generics.ListCreateAPIView):
 
 
 class SingleLessonView(generics.RetrieveAPIView):
+    """
+    Редактирование урока по id
+    """
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, )
 
 
 class CoursesLessonsView(generics.ListAPIView):
+    """
+    Уроки конкретного курса доступные студенту (если студент приобрел курс)
+    """
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated,)

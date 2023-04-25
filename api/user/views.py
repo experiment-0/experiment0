@@ -14,6 +14,9 @@ from .serializers import BaseUserRegistrationSerializer
 
 
 class RegistrationAPIView(APIView):
+    """
+    Регистрация пользователя
+    """
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
@@ -37,6 +40,9 @@ class RegistrationAPIView(APIView):
 
 
 class EmailVerificationAPIView(APIView):
+    """
+    Верификация по почте
+    """
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, uidb64, token):
