@@ -46,7 +46,7 @@ class Course(BaseContent):
 class Lesson(BaseContent):
     is_passed = models.BooleanField(default=False)
     course = models.ForeignKey(Course, verbose_name="Course", on_delete=models.CASCADE)
-    comment = models.ForeignKey(Comment, verbose_name="Content", on_delete=models.DO_NOTHING)
+    comment = models.ForeignKey(Comment, verbose_name="Comment", on_delete=models.DO_NOTHING, blank=True, null=True)
 
 
 class Category(models.Model):

@@ -3,7 +3,8 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils import timezone
 from django.core.mail import send_mail
-from rest_framework import permissions, status
+from rest_framework import permissions, status, generics
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -13,6 +14,9 @@ from .serializers import BaseUserRegistrationSerializer
 
 
 class RegistrationAPIView(APIView):
+    """
+    Регистрация пользователя
+    """
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
@@ -36,6 +40,9 @@ class RegistrationAPIView(APIView):
 
 
 class EmailVerificationAPIView(APIView):
+    """
+    Верификация по почте
+    """
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, uidb64, token):
@@ -47,6 +54,8 @@ class EmailVerificationAPIView(APIView):
 
         if user and default_token_generator.check_token(user, token):
             user.mail_verified_at = timezone.now()
+            if user.role == 'SA':
+                user.is_staff = True
             user.save()
             refresh = RefreshToken.for_user(user)
             return Response(

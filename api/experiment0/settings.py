@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # 'school.apps.SchoolConfig',
     'school',
     'rest_framework',
+    'drf_yasg',
 ]
 
 SITE_ID = 1
