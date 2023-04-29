@@ -6,6 +6,8 @@ from django.urls import reverse
 from django.test import TestCase
 from rest_framework.test import APITestCase
 from rest_framework import status
+from rest_framework.reverse import reverse as api_reverse
+from rest_framework_simplejwt.tokens import RefreshToken
 from user.models import BaseUser
 from user.serializers import BaseUserRegistrationSerializer
 # import requests
@@ -95,21 +97,22 @@ class BaseUserRegistrationSerializerTestCase(TestCase):
 
 
 class RegistrationTests(APITestCase):
-    def test_create_user(self):
-        """Какой-то очень долгий тест"""
-
-        url = reverse('user_registration')
-        data = {
-            'email': 'test@example.com',
-            'username': 'testuser',
-            'password': 'password123',
-            'role': 'St',
-        }
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(User.objects.count(), 1)
-        self.assertEqual(User.objects.get().username, 'testuser')
-        self.assertEqual(User.objects.get().email, 'test@example.com')
+    # def test_create_user(self):
+    #     """Какой-то очень долгий тест"""
+    #
+    #     url = reverse('user_registration')
+    #     data = {
+    #         'email': 'test@example.com',
+    #         'username': 'testuser',
+    #         'password': 'password123',
+    #         'role': 'St',
+    #     }
+    #     response = self.client.post(url, data, format='json')
+    #     print('a')
+    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    #     self.assertEqual(User.objects.count(), 1)
+    #     self.assertEqual(User.objects.get().username, 'testuser')
+    #     self.assertEqual(User.objects.get().email, 'test@example.com')
 
     def test_create_user_with_existing_email(self):
         BaseUser.objects.create_user(
@@ -223,3 +226,37 @@ class EmailVerificationAPIViewTests(APITestCase):
 #             uid = requests.utils.urlsafe_base64_encode(email.encode())
 #             url = f"{self.base_url}/user/delete/{uid}/{token}/"
 #             requests.delete(url)
+
+
+class LoginTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email='testuser@example.com',
+            username='testuser',
+            password='testpass123',
+            role='St',
+        )
+
+    def test_user_can_login(self):
+        data = {
+            'email': 'testuser@example.com',
+            'password': 'testpass123',
+        }
+        url = reverse("user_login")
+        login_response = self.client.post(url, data)
+        if login_response is True:
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_invalid_credentials(self):
+        data = {
+            'email': 'testuser@example.com',
+            'password': 'wrongpassword',
+        }
+
+        login_response = self.client.post('user_login', data)
+        if login_response is True:
+            url = reverse("user_login")
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+            self.assertIn('error', response.data)

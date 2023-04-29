@@ -13,3 +13,13 @@ class BaseUserRegistrationSerializer(serializers.ModelSerializer):
         model = BaseUser
         fields = ['email', 'username', 'password', 'role']
         extra_kwargs = {"password": {"write_only": True}}
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = BaseUser
+        fields = ['email', 'password']
+        # extra_kwargs = {"password": {"write_only": True}}
