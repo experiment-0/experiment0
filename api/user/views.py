@@ -67,6 +67,9 @@ class EmailVerificationAPIView(APIView):
 
 
 class LoginAPIView(APIView):
+    """
+    Представление логина юзера
+    """
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
@@ -88,6 +91,9 @@ class LoginAPIView(APIView):
 
 
 class LogoutAPIView(APIView):
+    """
+    Представление логаута юзера
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
