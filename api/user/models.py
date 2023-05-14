@@ -36,6 +36,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=10, blank=True, null=True)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     mail_verified_at = models.DateTimeField(blank=True, null=True)
+    # rated_lessons = models.ManyToManyField('school.Lesson', through='school.UserLessonRating', related_name='ratings')
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
