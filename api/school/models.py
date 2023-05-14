@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 from user.models import BaseUser
 
 
@@ -7,7 +8,7 @@ class BaseContent(models.Model):
     description = models.TextField(verbose_name="Description")
     video = models.URLField(blank=True, verbose_name="Video URL")
     image = models.ImageField(blank=True, upload_to='images/', verbose_name="Image")
-    # rating = models.FloatField(default=0, verbose_name="Rating")
+    rating = models.FloatField(default=0, verbose_name="Rating")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Created at")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Updated at")
     deleted = models.BooleanField(default=False, verbose_name="Deleted")
@@ -40,14 +41,6 @@ class Lesson(BaseContent):
     course = models.ForeignKey(Course, verbose_name="Course", on_delete=models.CASCADE)
 
 
-# class UserLessonRating(models.Model):
-#     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name='ratings')
-#     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='ratings')
-#
-#     class Meta:
-#         unique_together = [['user', 'lesson']]
-
-
 class Comment(models.Model):
     text = models.TextField(verbose_name="Text")
     user = models.ForeignKey(BaseUser, verbose_name="User", on_delete=models.CASCADE)
@@ -60,3 +53,17 @@ class Comment(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=255, verbose_name="Name")
     courses = models.ManyToManyField(Course, verbose_name="Courses")
+
+
+class Rating(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="ratings")
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE, related_name="ratings")
+    value = models.FloatField(default=0, verbose_name="Value")
+
+    class Meta:
+        unique_together = ("lesson", "user")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.lesson.rating = self.lesson.ratings.aggregate(Avg("value"))["value__avg"]
+        self.lesson.save()

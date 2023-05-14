@@ -1,12 +1,13 @@
 from rest_framework import generics, status
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import School, Course, Lesson, Comment
+from .models import School, Course, Lesson, Comment, Rating
 from user.models import BaseUser
-from .serializers import SchoolSerializer, CourseSerializer, LessonSerializer, CommentSerializer
+from .serializers import SchoolSerializer, CourseSerializer, LessonSerializer, \
+    CommentSerializer, RatingSerializer
 
 
 class SchoolListView(generics.ListCreateAPIView):
@@ -165,59 +166,31 @@ class ListCreateCommentsView(APIView):
         return Response(serializer.data)
 
 
-# class RateLessonView(APIView):
-#     """
-#     Этот View проверяет, что оценка находится в диапазоне от 1 до 5, затем создает
-#     или обновляет связанный объект `user_rating` для пользователя и урока.
-#     После того, как оценка была добавлена, он пересчитывает средний рейтинг урока и сохраняет его
-#     """
-#     queryset = Lesson.objects.all()
-#     serializer_class = LessonSerializer
-#     permission_classes = (IsAuthenticated,)
-#
-#     def post(self, request, lesson_id):
-#         lesson = get_object_or_404(Lesson, pk=lesson_id)
-#         user = request.user
-#         rating = float(request.data.get('rating'))
-#
-#         if not rating or rating < 1 or rating > 5:
-#             return Response({'error': 'Invalid rating value'})
-#
-#         user_rating, created = BaseUser.objects.get_or_create(rated_lessons=lesson)
-#         user_rating.rating = rating
-#         user_rating.save()
-#
-#         lesson_ratings = lesson.ratings.all().values_list('rating', flat=True)
-#         lesson.rating = sum(lesson_ratings) / len(lesson_ratings)
-#         lesson.save()
-#
-#         return Response({'success': 'Lesson was rated successfully'})
-#
-#
-# class RateCourseView(APIView):
-#     """
-#     Этот View проверяет, что оценка находится в диапазоне от 1 до 5, затем создает
-#     или обновляет связанный объект `user_rating` для пользователя и курса.
-#     После того, как оценка была добавлена, он пересчитывает средний рейтинг курса и сохраняет его
-#     """
-#     queryset = Course.objects.all()
-#     serializer_class = LessonRateSerializer
-#     permission_classes = (IsAuthenticated,)
-#
-#     def post(self, request, course_id):
-#         course = get_object_or_404(Course, pk=course_id)
-#         user = request.user
-#         rating = request.data.get('rating')
-#
-#         if not rating or rating < 1 or rating > 5:
-#             return Response({'error': 'Invalid rating value'})
-#
-#         user_rating, created = BaseUser.objects.get_or_create(rated_courses=course)
-#         user_rating.rating = rating
-#         user_rating.save()
-#
-#         course_ratings = course.ratings.all().values_list('rating', flat=True)
-#         course.rating = sum(course_ratings) / len(course_ratings)
-#         course.save()
-#
-#         return Response({'success': 'Course was rated successfully'})
+class RatingRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Обновление и удаление оценки определенного урока от юзера
+    """
+
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class LessonRatingAPIView(generics.RetrieveAPIView, generics.CreateAPIView):
+    """
+    Возможность для юзера один раз поставить оценку и отображение средней оценки определенного урока
+    """
+
+    serializer_class = RatingSerializer
+    permission_classes = (AllowAny,)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = get_object_or_404(Lesson, pk=kwargs.get("pk"))
+        rating = instance.rating if instance.ratings.exists() else 0
+        return Response({"rating": rating})
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
