@@ -27,7 +27,7 @@ class RegistrationAPIView(APIView):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
 
-        verification_link = f"{request.scheme}://{request.get_host()}/user/verify-email/{uid}/{token}/"
+        verification_link = f"{request.scheme}://{request.get_host()}/user/verify-email/?uid={uid}/&token={token}/"
         message = f"Please verify your email address by clicking the link below:\n\n{verification_link}"
         send_mail(
             "Verify your email address",
@@ -81,7 +81,7 @@ class LoginAPIView(APIView):
             user = BaseUser.objects.get(email=email)
             if password == user.password:
                 login(request, user)
-                return Response({"email": email},
+                return Response({"username": user.username},
                             status=status.HTTP_200_OK)
             else:
                 return Response({"error": "Invalid email or password."},
