@@ -1,10 +1,13 @@
 from rest_framework import generics, status
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import School, Course, Lesson, Comment, Rating
+from django.contrib.auth.decorators import user_passes_test
+
+from .models import School, Course, Lesson, Comment, Rating, LessonCompletion
 from user.models import BaseUser
 from .serializers import SchoolSerializer, CourseSerializer, LessonSerializer, \
     CommentSerializer, RatingSerializer
@@ -194,3 +197,21 @@ class LessonRatingAPIView(generics.RetrieveAPIView, generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@user_passes_test(lambda user: user.role in ['SC', 'SE'], login_url='/')
+def complete_lesson(request, student_id, lesson_id):
+    lesson = Lesson.objects.get(id=lesson_id)
+
+    completion, created = LessonCompletion.objects.get_or_create(
+        lesson=lesson,
+        student_id=student_id
+    )
+
+    if created:
+        completion.is_passed = True
+        completion.save()
+
+    return Response(status=status.HTTP_200_OK)

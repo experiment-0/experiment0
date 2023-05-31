@@ -41,6 +41,12 @@ class Lesson(BaseContent):
     course = models.ForeignKey(Course, verbose_name="Course", on_delete=models.CASCADE)
 
 
+class LessonCompletion(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    student = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    is_passed = models.BooleanField(default=False)
+
+
 class Comment(models.Model):
     text = models.TextField(verbose_name="Text")
     user = models.ForeignKey(BaseUser, verbose_name="User", on_delete=models.CASCADE)
