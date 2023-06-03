@@ -7,7 +7,7 @@ admin.site.register(Lesson)
 
 
 class LessonCompletionAdmin(admin.ModelAdmin):
-    list_display = ['id', 'lesson', 'student', 'is_passed']
+    list_display = ['id', 'lesson', 'student']
     list_filter = ['lesson', 'student']
 
 

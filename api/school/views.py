@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import user_passes_test
 from .models import School, Course, Lesson, Comment, Rating, LessonCompletion
 from user.models import BaseUser
 from .serializers import SchoolSerializer, CourseSerializer, LessonSerializer, \
-    CommentSerializer, RatingSerializer
+    CommentSerializer, RatingSerializer, LessonCompletionSerializer
 
 
 class SchoolListView(generics.ListCreateAPIView):
@@ -211,7 +211,24 @@ def complete_lesson(request, student_id, lesson_id):
     )
 
     if created:
-        completion.is_passed = True
         completion.save()
 
     return Response(status=status.HTTP_200_OK)
+
+
+class OpenedLessonsView(generics.ListAPIView):
+    """
+    Список пройденных уроков +1 (связь студент-курс)
+    """
+    queryset = LessonCompletion.objects.all()
+    serializer_class = LessonCompletionSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        user_id = self.request.user.pk
+        complete_lessons = LessonCompletion.objects.values(student_id=user_id)
+        ids = []
+        for item in complete_lessons:
+            print(item)
+            ids.append(item['lesson'])
+        return Lesson.objects.filter(id__in=ids)
