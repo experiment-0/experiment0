@@ -226,9 +226,4 @@ class OpenedLessonsView(generics.ListAPIView):
 
     def get_queryset(self):
         user_id = self.request.user.pk
-        complete_lessons = LessonCompletion.objects.values(student_id=user_id)
-        ids = []
-        for item in complete_lessons:
-            print(item)
-            ids.append(item['lesson'])
-        return Lesson.objects.filter(id__in=ids)
+        return LessonCompletion.objects.filter(student_id=user_id)
