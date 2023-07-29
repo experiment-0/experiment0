@@ -3,7 +3,8 @@ from .views import SchoolListView, SingleSchoolView, AdminsSchoolView, \
     CourseListView, SingleCourseView, \
     StudentsCoursesView, LessonListView, SingleLessonView, CoursesLessonsView, \
     ListCreateCommentsView, \
-    CommentDetailView, LessonRatingAPIView, RatingRetrieveUpdateDestroyAPIView
+    CommentDetailView, LessonRatingAPIView, RatingRetrieveUpdateDestroyAPIView, \
+    complete_lesson, OpenedLessonsView
 
 urlpatterns = [
     path('schools/', SchoolListView.as_view(), name='school-list'),
@@ -21,4 +22,6 @@ urlpatterns = [
          name="lesson-rating"),
     path("rating/<int:pk>/", RatingRetrieveUpdateDestroyAPIView.as_view(),
          name="rating-retrieve-update-delete"),
+    path('complete_lesson/<int:student_id>/<int:lesson_id>/', complete_lesson, name='complete_lesson'),
+    path('complete_lesson/', OpenedLessonsView.as_view(), name='complete_user_lesson'),
 ]
